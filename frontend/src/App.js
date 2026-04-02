@@ -5,32 +5,13 @@ function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     if (!message.trim()) return;
 
-    // show user message
-    const userMsg = { text: message, sender: "user" };
-    setChat((prev) => [...prev, userMsg]);
-
-    try {
-      const res = await fetch(
-        "https://chat-app-backend-j0ec.onrender.com/api/test"
-      );
-
-      const data = await res.json();
-
-      const botMsg = {
-        text: data.message || "Server replied",
-        sender: "bot",
-      };
-
-      setChat((prev) => [...prev, botMsg]);
-    } catch (error) {
-      setChat((prev) => [
-        ...prev,
-        { text: "❌ Server error", sender: "bot" },
-      ]);
-    }
+    setChat((prev) => [
+      ...prev,
+      { text: message, sender: "user" },
+    ]);
 
     setMessage("");
   };
@@ -38,7 +19,8 @@ function App() {
   return (
     <div className="app">
       <div className="chat-card">
-        <div className="header">💬 Cozy Chat</div>
+
+        {/* ❌ removed header */}
 
         <div className="chat-body">
           {chat.map((msg, i) => (
@@ -59,6 +41,7 @@ function App() {
           />
           <button onClick={sendMessage}>➤</button>
         </div>
+
       </div>
     </div>
   );
