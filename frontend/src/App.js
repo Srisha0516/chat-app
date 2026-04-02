@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 function App() {
   const [message, setMessage] = useState("");
 
-  // 🔥 IMPORTANT: Replace with your Render backend URL
-  const API_URL = "https://your-backend.onrender.com";
+  // ✅ YOUR REAL BACKEND URL (already deployed)
+  const API_URL = "https://chat-app-backend-j0ec.onrender.com";
 
   useEffect(() => {
     fetch(`${API_URL}/api/test`)
@@ -14,6 +14,7 @@ function App() {
       })
       .catch((err) => {
         console.error("Error:", err);
+        setMessage("Error connecting to backend ❌");
       });
   }, []);
 
