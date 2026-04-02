@@ -8,23 +8,29 @@ dotenv.config();
 
 const app = express();
 
+// ✅ Middleware
 app.use(express.json());
-app.use(cors());
 
-// ROUTES
+// 🔥 FIXED CORS (IMPORTANT)
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 
-// TEST
+// ✅ Test Route
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend working 🚀" });
 });
 
-// DB
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch(err => console.log("❌ DB Error:", err));
 
-// PORT
+// ✅ Port
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
