@@ -2,10 +2,30 @@ import React, { useState } from "react";
 
 function Signup({ setUser, setShowSignup }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignup = () => {
-    if (!name) return alert("Enter name");
-    setUser(name);
+  const handleSignup = async () => {
+    try {
+      const res = await fetch("https://chat-app-backend.onrender.com/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
+
+      setUser({ name });
+    } catch (err) {
+      alert("Server error");
+    }
   };
 
   return (
@@ -14,9 +34,23 @@ function Signup({ setUser, setShowSignup }) {
 
       <input
         type="text"
-        placeholder="Create username"
+        placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
+      />
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
 
       <button onClick={handleSignup}>Signup</button>

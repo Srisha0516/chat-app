@@ -11,11 +11,10 @@ function App() {
 
   const sendMessage = () => {
     if (input.trim() === "") return;
-    setMessages([...messages, { text: input, sender: user }]);
+    setMessages([...messages, { text: input, sender: user.name }]);
     setInput("");
   };
 
-  // 🔐 NOT LOGGED IN
   if (!user) {
     return (
       <div className="auth-container">
@@ -28,23 +27,20 @@ function App() {
     );
   }
 
-  // 💬 CHAT UI
   return (
     <div className="app">
       <div className="chat-container">
 
-        {/* Header */}
         <div className="chat-header">
           <h3>💬 Chat App</h3>
-          <p>{user} (Online)</p>
+          <p>{user.name} (Online)</p>
         </div>
 
-        {/* Messages */}
         <div className="chat-box">
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`message ${msg.sender === user ? "own" : ""}`}
+              className={`message ${msg.sender === user.name ? "own" : ""}`}
             >
               <strong>{msg.sender}: </strong>
               {msg.text}
@@ -52,7 +48,6 @@ function App() {
           ))}
         </div>
 
-        {/* Input */}
         <div className="input-box">
           <input
             type="text"
