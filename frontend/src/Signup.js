@@ -1,31 +1,31 @@
 import React, { useState } from "react";
 
-function Login({ setUser, setShowSignup }) {
+function Signup({ setUser, setShowSignup }) {
   const [name, setName] = useState("");
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     if (!name) return alert("Enter name");
     setUser(name);
   };
 
   return (
     <div className="auth-box">
-      <h2>Login</h2>
+      <h2>Signup</h2>
 
       <input
         type="text"
-        placeholder="Enter your name"
+        placeholder="Create username"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleSignup}>Signup</button>
 
-      <p onClick={() => setShowSignup(true)}>
-        Don't have account? Signup
+      <p onClick={() => setShowSignup(false)}>
+        Already have account? Login
       </p>
     </div>
   );
 }
 
-export default Login;
+export default Signup;
