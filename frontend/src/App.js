@@ -1,75 +1,65 @@
-import React, { useState } from "react";
-
-const API_URL = "https://chat-app-backend-j0ec.onrender.com";
+import { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
   const [message, setMessage] = useState("");
+  const [chat, setChat] = useState([]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const sendMessage = async () => {
+    if (!message.trim()) return;
 
-  const handleSubmit = async () => {
-    const url = isLogin ? "/api/auth/login" : "/api/auth/signup";
+    // show user message
+    const userMsg = { text: message, sender: "user" };
+    setChat((prev) => [...prev, userMsg]);
 
     try {
-      const res = await fetch(API_URL + url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        "https://chat-app-backend-j0ec.onrender.com/api/test"
+      );
 
       const data = await res.json();
-      setMessage(data.message);
-    } catch (err) {
-      setMessage("Error ❌");
+
+      const botMsg = {
+        text: data.message || "Server replied",
+        sender: "bot",
+      };
+
+      setChat((prev) => [...prev, botMsg]);
+    } catch (error) {
+      setChat((prev) => [
+        ...prev,
+        { text: "❌ Server error", sender: "bot" },
+      ]);
     }
+
+    setMessage("");
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>{isLogin ? "Login" : "Signup"}</h1>
+    <div className="app">
+      <div className="chat-card">
+        <div className="header">💬 Cozy Chat</div>
 
-      {!isLogin && (
-        <input
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-        />
-      )}
+        <div className="chat-body">
+          {chat.map((msg, i) => (
+            <div
+              key={i}
+              className={`msg ${msg.sender === "user" ? "user" : "bot"}`}
+            >
+              {msg.text}
+            </div>
+          ))}
+        </div>
 
-      <br />
-      <input
-        name="email"
-        placeholder="Email"
-        onChange={handleChange}
-      />
-      <br />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        onChange={handleChange}
-      />
-
-      <br /><br />
-      <button onClick={handleSubmit}>
-        {isLogin ? "Login" : "Signup"}
-      </button>
-
-      <p>{message}</p>
-
-      <button onClick={() => setIsLogin(!isLogin)}>
-        Switch to {isLogin ? "Signup" : "Login"}
-      </button>
+        <div className="chat-input">
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type message..."
+          />
+          <button onClick={sendMessage}>➤</button>
+        </div>
+      </div>
     </div>
   );
 }
