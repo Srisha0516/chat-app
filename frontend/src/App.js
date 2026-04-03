@@ -6,12 +6,7 @@ import Signup from "./Signup";
 function App() {
   const [user, setUser] = useState(null);
   const [showSignup, setShowSignup] = useState(false);
-
-  const [messages, setMessages] = useState([
-    { text: "Hey 👋 Welcome to chat!", sender: "System" },
-    { text: "Start chatting below ⬇️", sender: "System" }
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
   const sendMessage = () => {
@@ -25,12 +20,7 @@ function App() {
     setInput("");
   };
 
-  // 🔥 Logout
-  const logout = () => {
-    setUser(null);
-  };
-
-  // 🔐 AUTH SCREEN
+  // 🔥 THIS IS THE FIX — PAGE SWITCHING
   if (!user) {
     return (
       <div className="auth-container">
@@ -43,48 +33,38 @@ function App() {
     );
   }
 
-  // 💬 CHAT UI
+  // ✅ CHAT PAGE AFTER LOGIN
   return (
     <div className="app">
       <div className="chat-container">
 
-        {/* HEADER */}
         <div className="chat-header">
-          <div>
-            <h3>💬 Chat App</h3>
-            <p>{user.name} • Online</p>
-          </div>
-
-          <button className="logout-btn" onClick={logout}>
-            Logout
-          </button>
+          <h3>💬 Chat App</h3>
+          <p>{user?.name} (Online)</p>
         </div>
 
-        {/* MESSAGES */}
         <div className="chat-box">
           {messages.map((msg, index) => (
             <div
               key={index}
               className={`message ${
-                msg.sender === user.name ? "own" : "other"
+                msg.sender === user?.name ? "own" : ""
               }`}
             >
-              <span className="sender">{msg.sender}</span>
-              <p>{msg.text}</p>
+              <strong>{msg.sender}: </strong>
+              {msg.text}
             </div>
           ))}
         </div>
 
-        {/* INPUT */}
         <div className="input-box">
           <input
             type="text"
-            placeholder="Type a message..."
+            placeholder="Type message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-
-          <button onClick={sendMessage}>Send</button>
+          <button onClick={sendMessage}>➤</button>
         </div>
 
       </div>
