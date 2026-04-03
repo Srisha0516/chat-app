@@ -5,32 +5,38 @@ const router = express.Router();
 
 // SIGNUP
 router.post("/signup", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
+  try {
     const user = new User({ name, email, password });
     await user.save();
 
-    res.json({ message: "User registered successfully" });
+    res.json({
+      success: true,
+      name: user.name,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json({ success: false });
   }
 });
 
 // LOGIN
 router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
+  try {
     const user = await User.findOne({ email, password });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.json({ success: false });
     }
 
-    res.json({ message: "Login successful", user });
+    res.json({
+      success: true,
+      name: user.name,
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json({ success: false });
   }
 });
 
