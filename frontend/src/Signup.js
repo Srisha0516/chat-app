@@ -11,23 +11,33 @@ function Signup({ setUser, setShowSignup }) {
       return;
     }
 
-    const res = await fetch(
-      "https://chat-app-backend-j0ec.onrender.com/api/auth/signup",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+    try {
+      const res = await fetch(
+        "https://chat-app-backend-j0ec.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Signup successful ✅");
+        setShowSignup(false); // go to login
+      } else {
+        alert(data.message || "Signup failed ❌");
       }
-    );
-
-    const data = await res.json();
-
-    if (data.success) {
-      setUser({ name: data.name });
-    } else {
-      alert("Signup failed");
+    } catch (err) {
+      alert("Server error ❌");
+      console.log(err);
     }
   };
 
@@ -43,7 +53,7 @@ function Signup({ setUser, setShowSignup }) {
       />
 
       <input
-        type="text"
+        type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
