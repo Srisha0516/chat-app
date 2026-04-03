@@ -1,38 +1,37 @@
 import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import http from "http";
+import { Server } from "socket.io";
 import cors from "cors";
-import authRoutes from "./routes/auth.js";
-
-dotenv.config();
 
 const app = express();
-
-// ✅ Middleware
+app.use(cors());
 app.use(express.json());
 
-// 🔥 FIXED CORS (IMPORTANT)
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}));
+const server = http.createServer(app);
 
-// ✅ Routes
-app.use("/api/auth", authRoutes);
-
-// ✅ Test Route
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend working 🚀" });
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
 });
 
-// ✅ MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.log("❌ DB Error:", err));
+// 🔥 SOCKET LOGIC
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-// ✅ Port
-const PORT = process.env.PORT || 5000;
+  socket.on("send_message", (data) => {
+    io.emit("receive_message", data); // send to all users
+  });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${PORT}`);
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+app.get("/", (req, res) => {
+  res.send("Server running");
+});
+
+server.listen(5000, () => {
+  console.log("Server running on port 5000");
 });
