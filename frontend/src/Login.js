@@ -29,7 +29,7 @@ function Login({ setUser, setShowSignup }) {
 
       if (res.ok) {
         alert("Login successful ✅");
-        setUser(data.user); // IMPORTANT
+        setUser({ name: email }); // IMPORTANT
       } else {
         alert(data.message || "Login failed ❌");
       }
