@@ -4,16 +4,30 @@ function Signup({ setUser, setShowSignup }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!name || !email) {
       alert("Please fill all fields");
       return;
     }
 
-    // 🔥 SAME FIX HERE
-    setUser({ name });
+    const res = await fetch(
+      "https://chat-app-backend-j0ec.onrender.com/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      }
+    );
 
-    console.log("Signup clicked");
+    const data = await res.json();
+
+    if (data.success) {
+      setUser({ name: data.name });
+    } else {
+      alert("Signup failed");
+    }
   };
 
   return (

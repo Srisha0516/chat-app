@@ -4,16 +4,30 @@ function Login({ setUser, setShowSignup }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       alert("Please fill all fields");
       return;
     }
 
-    // 🔥 THIS LINE IS THE IMPORTANT FIX
-    setUser({ name: email });
+    const res = await fetch(
+      "https://chat-app-backend-j0ec.onrender.com/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      }
+    );
 
-    console.log("Login clicked"); // for debugging
+    const data = await res.json();
+
+    if (data.success) {
+      setUser({ name: data.name });
+    } else {
+      alert("Login failed");
+    }
   };
 
   return (
