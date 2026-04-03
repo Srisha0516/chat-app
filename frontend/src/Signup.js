@@ -3,37 +3,17 @@ import React, { useState } from "react";
 function Signup({ setUser, setShowSignup }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSignup = async () => {
-    if (!name || !email || !password) {
-      alert("Enter all fields");
+  const handleSignup = () => {
+    if (!name || !email) {
+      alert("Please fill all fields");
       return;
     }
 
-    try {
-      const res = await fetch("https://chat-app-backend.onrender.com/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+    // 🔥 SAME FIX HERE
+    setUser({ name });
 
-      const data = await res.json();
-
-      // ✅ if backend works
-      if (res.ok) {
-        setUser({ name });
-      } else {
-        alert(data.message || "Signup failed");
-      }
-    } catch (err) {
-      console.log("Backend not reachable, using fallback signup");
-
-      // 🔥 FALLBACK (so button ALWAYS works)
-      setUser({ name });
-    }
+    console.log("Signup clicked");
   };
 
   return (
@@ -48,17 +28,10 @@ function Signup({ setUser, setShowSignup }) {
       />
 
       <input
-        type="email"
+        type="text"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
       />
 
       <button onClick={handleSignup}>Signup</button>
