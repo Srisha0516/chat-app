@@ -11,7 +11,7 @@ function Signup({ setUser, setShowSignup }) {
     }
 
     const res = await fetch(
-      "https://chat-app-backend-j0ec.onrender.com/signup",
+      "https://chat-app-backend-j0ec.onrender.com/api/auth/signup",
       {
         method: "POST",
         headers: {

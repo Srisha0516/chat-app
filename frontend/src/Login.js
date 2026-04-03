@@ -11,7 +11,7 @@ function Login({ setUser, setShowSignup }) {
     }
 
     const res = await fetch(
-      "https://chat-app-backend-j0ec.onrender.com/login",
+      "https://chat-app-backend-j0ec.onrender.com/api/auth/login",
       {
         method: "POST",
         headers: {
